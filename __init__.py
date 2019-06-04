@@ -1,4 +1,4 @@
-__all__ = ['metadata', 'get_summary', 'summarize_v2', 'percentage']
+__all__ = ['metadata', 'add_xval']
 
 from .metadata import metadata
-from .metadata import get_summary, summarize_v2, percentage
+from .metadata import add_xval

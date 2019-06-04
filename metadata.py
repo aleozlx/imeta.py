@@ -5,6 +5,10 @@ from pathlib import Path
 def percentage(a, b):
     return '%.1f%%'%(a/b*100) if b>0 else '0%'
 
+def add_xval(cur, num_folds, partition_name):
+    cur.execute("""UPDATE frame SET partitions = partitions || hstore('%s', chr(floor(random() * %d + 65)::int));""" % (partition_name, num_folds))
+    cur.execute("""INSERT INTO partitions (name, labels, created_on, summary, impl_version) values ('%s', array%s, now(), true, 2);""" %(partition_name, list(map(chr, range(65, 65+num_folds)))))
+
 def summarize_v2(cur, partition_name, label):
     cur.execute("SELECT count(*) FROM frame where partitions -> '{}' = '{}' and partitions ? 'active';".format(partition_name, label))
     (active, ) = cur.fetchone()
