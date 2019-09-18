@@ -10,9 +10,9 @@ def percentage(a, b):
 #     cur.execute("""INSERT INTO partition_ns (name, labels, created_on, summary, impl_version) values ('%s', array%s, now(), true, 2);""" %(partition_name, list(map(chr, range(65, 65+num_folds)))))
 
 def summarize_v2(cur, partition_name, label):
-    cur.execute("SELECT count(*) FROM frame where partitions -> '{}' = '{}' and partitions ? 'active';".format(partition_name, label))
+    cur.execute("SELECT count(*) FROM frame where partitions ->> '{}' = '{}' and partitions ? 'active';".format(partition_name, label))
     (active, ) = cur.fetchone()
-    # cur.execute("SELECT count(*) FROM frame where partitions -> '{}' = '{}';".format(partition_name, label))
+    # cur.execute("SELECT count(*) FROM frame where partitions ->> '{}' = '{}';".format(partition_name, label))
     # (partition_total, ) = cur.fetchone()
     cur.execute("SELECT count(*) FROM frame where partitions ?& array['{}', 'active'];".format(partition_name))
     (namespace_total, ) = cur.fetchone()
